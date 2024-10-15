@@ -1,0 +1,7 @@
+*.s9pk
+scripts/*.js
+.DS_Store
+.vscode/
+docker-images
+*.pyc
+__pycache__/

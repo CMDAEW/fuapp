@@ -1,0 +1,18 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "172.21.237.186",
+            "port": 3306,
+            "driver": "MariaDB",
+            "name": "fuappdb",
+            "database": "outvoicing",
+            "username": "flaskuser",
+            "password": "flaskpassword"
+        }
+    ]
+}

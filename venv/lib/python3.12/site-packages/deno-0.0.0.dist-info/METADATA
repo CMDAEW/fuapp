@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: deno
+Version: 0.0.0
+Summary: python ffi for deno ops
+Home-page: https://github.com/hayd/deno-py
+Author: Andy Hayden
+Author-email: andyhayden1@gmail.com
+License: MIT
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Description-Content-Type: text/markdown
+
+stub
+
+

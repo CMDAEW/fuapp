@@ -1,0 +1,102 @@
+Metadata-Version: 2.1
+Name: felt
+Version: 0.2
+Summary: Estimate flow on paths.
+Home-page: https://gitlab.com/ericstalbot/felt
+Author: Eric S. Talbot
+License: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >=3.7, <4
+Provides-Extra: dev
+Requires-Dist: pytest ; extra == 'dev'
+Requires-Dist: pytest-cov ; extra == 'dev'
+Requires-Dist: mypy ; extra == 'dev'
+Requires-Dist: pylint ; extra == 'dev'
+Requires-Dist: invoke ; extra == 'dev'
+Requires-Dist: wheel ; extra == 'dev'
+Requires-Dist: sphinx ; extra == 'dev'
+Requires-Dist: sphinx-rtd-theme ; extra == 'dev'
+Requires-Dist: twine ; extra == 'dev'
+
+####
+Felt
+####
+
+Felt is a Python library for estimating path flows on networks where flows are
+not directly observable. It is motivated by estimating vehicle flows on highway
+networks, but may be applied to other problems. 
+
+Quick Start
+===========
+
+Installation
+------------
+
+::
+
+    pip install felt
+
+Example
+-------
+
+We'd like to estimate path flows on a network. To start we build a model of the
+network. The network has two links that merge together onto a single link, and
+then diverge again to two links. 
+
+>>> from felt import Network, Node, Way
+>>> network = Network(
+...     [
+...         Node(1, 0.0, 0.0),
+...         Node(2, 1.0, 0.0),
+...         Node(3, 2.0, 0.0),
+...         Node(4, 3.0, 0.0),
+...         Node(5, 0.0, 1.0),
+...         Node(6, 3.0, 1.0)
+...     ],
+...     [
+...         Way([1, 2, 3, 4], oneway=True),
+...         Way([5, 2], oneway=True),
+...         Way([3, 6], oneway=True)
+...     ]
+... )
+
+Now we make a list of all the possible paths on this network. There are two
+source nodes: 1 and 5; and there are two sink nodes: 4 and 6. Each source node
+is connected with a path to each other sink node, to make a total of four paths.
+Our goal is to estimate the flow on each of the four paths. 
+
+>>> paths = [
+...     network.shortest_path(1, 4),
+...     network.shortest_path(1, 6),
+...     network.shortest_path(5, 4),
+...     network.shortest_path(5, 6)
+... ]
+>>> paths
+[Path([1, 2, 3, 4]), Path([1, 2, 3, 6]), Path([5, 2, 3, 4]), Path([5, 2, 3, 6])]
+
+To help us with our estimation, we have movement flow observations for three
+movements. You can think of movements as sub-sequences of paths, where each path
+either has that sub-sequence or not. The movement flow observations for the
+three movements are 30, 70, and 40.
+
+>>> from felt import Movement
+>>> movements = [
+...     Movement([..., 1, 2, 3, ...]),
+...     Movement([..., 5, 2, 3, ...]),
+...     Movement([..., 2, 3, 4, ...])
+... ]
+>>> movement_flows = [30, 70, 40]
+
+Now we can estimate the path flows from our movement flows. Our estimates are
+12, 18, 28 and 42.
+
+>>> from felt import estimate
+>>> path_flows = estimate(paths, movements, movement_flows)
+>>> print([round(v) for v in path_flows])
+[12, 18, 28, 42]
+
+Documentation
+-------------
+
+https://felt.readthedocs.io/en/latest/index.html
+
